@@ -10,6 +10,20 @@ $products_data = [];
 $user_id = $user_data['user_id'];
 $exporter_name = $user_data['user_name'];
 
+$query = "select harborId,harborName from harbors";
+
+$result = mysqli_query($con, $query);
+// print_r( $result);
+
+if($result)
+{
+    if($result && mysqli_num_rows($result) > 0)
+    {
+        $harbors_data = mysqli_fetch_all($result);
+        // print_r($products_data);
+    }
+}
+
 $query = "select * from products";
 
 $result = mysqli_query($con, $query);
@@ -100,10 +114,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
     $product_name = $real_data['product_name'];
 
     $manufacturer_id = $real_data['manufacturerId'];
+    $harborId = $real_data['harborId'];
+
     // echo $manufacturer_id;
     $quantity = $real_data['quantity'];
 
-    $query = "insert into manufacturer_orders (exporter_company_id,exporter_name,product_id,product_name,manufacturer_id,quantity) values ('{$user_id}', '{$exporter_name}', '{$product_id}', '{$product_name}','{$manufacturer_id}','{$quantity}')";
+    $query = "insert into manufacturer_orders (exporter_company_id,harborId,exporter_name,product_id,product_name,manufacturer_id,quantity) values ('{$user_id}','{$harborId}', '{$exporter_name}', '{$product_id}', '{$product_name}','{$manufacturer_id}','{$quantity}')";
 
     mysqli_query($con, $query);
     header("Location: index.php");
@@ -171,9 +187,11 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                         Importer
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="products.php">Place order</a></li>
+                        <li><a class="dropdown-item" href="test.php">Place order</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="myorders.php">My orders</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="addwarehouse.php">Add warehouse</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -182,6 +200,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="received_orders.php">Received orders</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="manufacturerorder.php">Order inventory</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -191,7 +211,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="addproducts.php">Add products</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="products.php">View all products</a></li>
+                        <li><a class="dropdown-item" href="allproducts.php">View all products</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -202,6 +222,33 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                         <li><a class="dropdown-item" href="addusers.php">Add users</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="viewusers.php">View all users</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="addharbour.php">Add a harbor</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="addcontainer.php">Add container</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="addmanufacturer.php">Add manufacturer</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Orders
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="received_orders.php">Load container</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="shipping_orders.php">Sea shipping order</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="index.php">Truck shipping order</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Manufacturer
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="man_received_orders.php">Export orders</a></li>
                     </ul>
                 </li>
             </ul>
@@ -215,6 +262,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
             </div>
         </div>
     </nav>
+    </div>
       
     <div class="container-fluid  mt-2">
         <div class="row justify-content-center bg-light">
@@ -304,6 +352,30 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
         </div>
     </div>
 
+    <div class="container-fluid  mt-2">
+        <div class="row justify-content-center bg-light">
+            <div class="col-6">
+                <div class="row justify-content-center bg-light">
+                    <div class="col-8 p-2">
+                    <div class="dropdown">
+                                    <select class="form-select" aria-label="Default select example" onchange="setHarbor()" id="harbor">
+                                        <option selected>Choose harbor from the list</option>
+                                        <?php for ($row = 0; $row < count($harbors_data); $row++) { ?>
+                                            
+                                            <option name="manufacturer" value="<?php echo $harbors_data[$row][0]; ?>" >
+                                                <?php echo $harbors_data[$row][1]; ?>
+                                            </option>
+                                        <?php }?>
+                                    </select>
+                                </div>                  
+                    </div>
+                </div>
+               
+                
+        </div>
+    </div>
+
+
     <div class="container-fluid text-center mt-2">
 
     <div class="container-fluid justify-content-center mt-2">
@@ -333,6 +405,14 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
         var product_ids = [];
         var selected = [];
         var manufacturerId = 0;
+        var harborId = 0;
+        function setHarbor()
+        {
+            var subjectIdNode = document.getElementById('harbor');
+            harborId = subjectIdNode.options[subjectIdNode.selectedIndex].value;
+            console.log("The selected name=" + harborId);
+
+        }
         function setName()
         {
             var subjectIdNode = document.getElementById('manufacturer');
@@ -374,6 +454,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                     "product_id"    : parseInt(data[0]),
                     "product_name"  : data[1],
                     "manufacturerId": parseInt(manufacturerId),
+                    "harborId"      : parseInt(harborId),
                     "quantity"  : parseInt(quantity)
                     }
                     json_data = JSON.stringify(order_data);

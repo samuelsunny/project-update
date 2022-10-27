@@ -41,7 +41,7 @@ echo "problem in getting data";
 $get = "select product_name,product_id from products where exporter_id = '{$user_id}'";
 
 $result = mysqli_query($con, $get);
-// print_r( $result);
+print_r( $result);
 
 if($result)
 {
@@ -59,17 +59,17 @@ echo "problem in getting data";
 
 if($_SERVER['REQUEST_METHOD'] == "POST")
 {
-    // print_r($_POST);
-    $real_data = json_decode($_POST['total'],true);
-    $harborId = $real_data['harborId'];
-    $exporterId = $real_data['exporterId'];
-    $productId = $real_data['productId'];
-    $query = "insert into harbor_stock (harborId,productId,productQuantity,exporterId) values ('{$harborId}', '{$productId}', 0, '{$exporterId}')";
+    print_r($_POST);
+    // $real_data = json_decode($_POST['total'],true);
+    // $harborId = $real_data['harborId'];
+    // $exporterId = $real_data['exporterId'];
+    // $productId = $real_data['productId'];
+    // $query = "insert into harbor_stock_room (harborId,productId,productQuantity,exporterId) values ('{$harborId}', '{$productId}', 0, '{$exporterId}')";
 
-    mysqli_query($con, $query);
+    // mysqli_query($con, $query);
 
-    header("Location: add_harbor_stock.php");
-    die;
+    // header("Location: add_harbor_stock.php");
+    // die;
     // When the user clicks on the create account button
     // $harborName = $_POST['harbourName'];
     // $country  = $_POST['country'];

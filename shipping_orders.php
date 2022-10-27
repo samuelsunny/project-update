@@ -102,8 +102,6 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="viewusers.php">View all users</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="add_harbor_stock.php">Add stock</a></li>
-                        <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="addharbour.php">Add a harbor</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="addcontainer.php">Add container</a></li>
@@ -143,37 +141,37 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
             </div>
         </div>
     </nav>
+</div>
       
-    <div class="row justify-content-center mt-5">
+    <div class="row justify-content-center mt-2">
         <div class="col-6">
-            <h1 class="display-4 fs-2 text-center"><b>Container Management System</b></h1>
+            <h1 class="display-4 fs-2 text-center"><b>Orders to be shipped</b></h1>
         </div>
     </div>
   
   
       
-
+    <div class="container">
       <div class="row mt-4">
-          <h1 class="display-4 fs-3 "><b>Your orders</b></h1>  
           <table class="table">
             <thead>
                 <tr>
-                <th scope="col">Loading_order_id</th>
-                <th scope="col">Source harbor Id</th>
-                <th scope="col">Container Id</th>
-                <th scope="col">Packaging Id</th>
-                <th scope="col">Loading date</th>
+                <th scope="col" class="text-center">Loading order Id</th>
+                <th scope="col" class="text-center">Source harbor Id</th>
+                <th scope="col" class="text-center">Container Id</th>
+                <th scope="col" class="text-center">Packaging Id</th>
+                <th scope="col" class="text-center">Loading date</th>
                 </tr>
             </thead>
             <tbody>
             <?php for ($row = 0; $row < count($loading_orders_data); $row++) {?>
               <tr>
-                <th scope="row"><?php echo $loading_orders_data[$row][0] ?></th>
-                <td><?php echo $loading_orders_data[$row][3] ?></td>
-                <td><?php echo $loading_orders_data[$row][1] ?></td>
-                <td><?php echo $loading_orders_data[$row][4] ?></td>
-                <td><?php echo $loading_orders_data[$row][8] ?></td>
-                <td>
+                <th scope="row" class="text-center"><?php echo $loading_orders_data[$row][0] ?></th>
+                <td class="text-center"><?php echo $loading_orders_data[$row][3] ?></td>
+                <td class="text-center"><?php echo $loading_orders_data[$row][1] ?></td>
+                <td class="text-center"><?php echo $loading_orders_data[$row][4] ?></td>
+                <td class="text-center"><?php echo $loading_orders_data[$row][8] ?></td>
+                <td class="text-center">
                     <a href="http://localhost/Container-Scheduling-and-management/shippingorderform.php?cid=<?php echo $loading_orders_data[$row][0]; ?>">
                     <button type="button" class="btn btn-danger"> Load into ship   </button>   
                     </a>    
@@ -183,6 +181,7 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
             </tbody>
           </table>     
       </div>
+    </div>
       <footer class="footer">
         <div class=" text-center bg-light">
           <a href="index.php">

@@ -4,6 +4,8 @@ session_start();
 include("connection.php");
 include("functions.php");
 
+$user_data = check_login($con);
+$user_id = $user_data['user_id'];
 if($_SERVER['REQUEST_METHOD'] == "POST")
 {
     // When the user clicks on the create account button
@@ -41,9 +43,8 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
   </head>
   <body>
-    <div class="container mt-5">
-    <div class="container-fluid">
-    <nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+  <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">C S M</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,8 +97,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="viewusers.php">View all users</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="add_harbor_stock.php">Add stock</a></li>
-                        <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="addharbour.php">Add a harbor</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="addcontainer.php">Add container</a></li>
@@ -138,6 +137,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
         </div>
     </nav>
 </div>
+    <div class="container mt-5">
         <div class="row justify-content-center mt-5">
             <div class="col-6">
                 <img src="manufacturing.png" class="img-fluid" alt="Responsive image">

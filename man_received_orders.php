@@ -40,33 +40,59 @@ if($_SERVER['REQUEST_METHOD'] == "GET")
 if($_SERVER['REQUEST_METHOD'] == "POST")
 {
     print_r($_POST);
+    $check_flag = 0;
     $status = $_POST['status'];
     $product_id = $_POST['product_id'];
-    $query = "select productQuantity from harbor_stock where productId = '{$product_id}'";
+    $exporter_id = $_POST['exporter_id'];
+    $query = "select productQuantity from harbor_stock_room where exporterId = '{$user_id}' and productId = '{$product_id}'";
     $result = mysqli_query($con, $query);
     $order_data = mysqli_fetch_all($result);
-    // print_r($order_data[0][0]);
-    $existing_quantity = $order_data[0][0];
+    if(count($order_data) == 0)
+    {
+        $existing_quantity = 0;
+        $check_flag = 1;
+    }
+    else
+    {
+        echo "existing quantity:";
+        print_r($order_data);
+        $existing_quantity = $order_data[0][0];
+    }
+   
 
-    $query = "select quantity from manufacturer_orders where product_id = '{$product_id}' and exporter_company_id = '{$user_id}'";
+    $query = "select quantity,harborId from manufacturer_orders where product_id = '{$product_id}' and exporter_company_id = '{$user_id}'";
     $result = mysqli_query($con, $query);
     $order_data = mysqli_fetch_all($result);
     $accepted_quantity = $order_data[0][0];
+    $harborId = $order_data[0][1];
     $new_quantity = (int)$existing_quantity + (int)$accepted_quantity;
-    // echo $new_quantity;
+    echo $existing_quantity,$new_quantity;
 
-    $query = "update harbor_stock set productQuantity ='{$new_quantity}' WHERE exporterId = '{$user_id}'";
+    if($check_flag == 1)
+    {
+        $query = "insert into harbor_stock_room (harborId,productId,productQuantity,exporterId) values ('{$harborId}', '{$product_id}', '{$new_quantity}', '{$exporter_id}')";
+
+        mysqli_query($con, $query);
+    }
+    else
+    {
+        $query = "update harbor_stock_room set productQuantity ='{$new_quantity}' WHERE productId = '{$product_id}' and harborId = '{$harborId}'";
+
+        mysqli_query($con, $query);
+    }
+    
+    // Updating the quantity in products table
+
+    $query = "update products set quantity ='{$new_quantity}' WHERE product_id = '{$product_id}'";
 
     mysqli_query($con, $query);
+    
   
     $query = "delete from manufacturer_orders where product_id = '{$product_id}' and exporter_company_id = '{$user_id}'";
 
     mysqli_query($con, $query);
 
-    $query = "update products set quantity ='{$new_quantity}' WHERE product_id = '{$product_id}'";
-
-    mysqli_query($con, $query);
-
+   
     header("Location: index.php");
     die;
     // if ($status == "accept")
@@ -175,8 +201,6 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="viewusers.php">View all users</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="add_harbor_stock.php">Add stock</a></li>
-                        <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="addharbour.php">Add a harbor</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="addcontainer.php">Add container</a></li>
@@ -242,11 +266,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST")
               <tr>
                 <th scope="row"><?php echo $orders_data[$row][0] ?></th>
                 <td><?php echo $orders_data[$row][4] ?></td>
-                <td><?php echo $orders_data[$row][2] ?></td>
-                <td><?php echo $orders_data[$row][6] ?></td>
+                <td><?php echo $orders_data[$row][3] ?></td>
+                <td><?php echo $orders_data[$row][7] ?></td>
                 <td>
                     <form action= "man_received_orders.php" method = "post">
-                                    <input type="hidden"  name="product_id" value="<?php echo $orders_data[$row][3]; ?>"/>
+                                    <input type="hidden"  name="product_id" value="<?php echo $orders_data[$row][4]; ?>"/>
+                                    <input type="hidden"  name="exporter_id" value="<?php echo $orders_data[$row][1]; ?>"/>
                                     <input type="hidden"  name="status" value="<?php echo "accept"; ?>"/>
                                     <button type="submit" class="btn btn-success">
                                     <?php echo "accept" ?>
